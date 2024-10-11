@@ -6,15 +6,17 @@ std::thread Process::startPrintOrders(Spooler &spooler) const {
         logger::print("Processo [{}] enviará {} documentos\n", pid, n);
         for (int i = 0; i < n; i++) {
             std::this_thread::sleep_for(std::chrono::milliseconds(generateRandomNumber(0, 5000)));
-            spooler.print(pid, getRandomFile(), *PrintRequest::valueOf(generateRandomNumber(1, 5)));
+            auto file = getRandomFile();
+            spooler.print(pid, file.first, file.second,
+                          *PrintJob::priorityOf(generateRandomNumber(1, 5)));
         }
     });
 }
 
 void Simulator::start(unsigned int num_process, unsigned int num_printers) {
-    Printer printer1(1, 150);
-    Printer printer2(2, 150);
-    Printer printer3(3, 200);
+//    Printer printer1(1, 150);
+//    Printer printer2(2, 150);
+//    Printer printer3(3, 200);
 
 //    Spooler spooler(printer1, printer2, printer3);
 //    std::vector<std::pair<Process, std::thread>> process;
