@@ -100,22 +100,28 @@ private:
                                              unsigned int dpi) const;
 };
 
+template<typename T>
+concept IsPrinter = std::is_same_v<std::decay_t<T>, Printer>;
+
+template<typename... Printers>
+concept AllPrinters = (IsPrinter<Printers> && ...);
+
 class Spooler {
 public:
 
-    template<typename... Printers>
+    template<AllPrinters... Printers>
     explicit Spooler(Printers &&... prints) : buffer_capacity(10) {
         addPrinter(std::forward<Printers>(prints)...);
         printPrinters();
     }
 
-    template<typename... Printers>
+    template<AllPrinters... Printers>
     explicit Spooler(unsigned long buffer_capacity, Printers &&... prints) : buffer_capacity(buffer_capacity) {
         addPrinter(std::forward<Printers>(prints)...);
         printPrinters();
     }
 
-    template<typename P, typename... Printers>
+    template<IsPrinter P, AllPrinters... Printers>
     void addPrinter(P &&printer, Printers &&... others) {
         printers.emplace_back(std::forward<P>(printer));
         addPrinter(std::forward<Printers>(others)...);
@@ -142,7 +148,7 @@ private:
     std::condition_variable cond_empty;
 //    float simulation_velocity;
 
-    template<typename... Args>
+    template<AllPrinters... Args>
     void addPrinter(Args &&... args) {
         (printers.emplace_back(std::forward<Args>(args)), ...);
     }
