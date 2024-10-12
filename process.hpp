@@ -83,10 +83,3 @@ private:
 //
 //// Imagens possuem geralmente
 //".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg", ".ico"
-
-class Simulator {
-public:
-
-    static void
-    start(unsigned int num_process, unsigned int num_printers);
-};

@@ -8,5 +8,5 @@ add_executable(print-spooler main.cpp
         spooler.hpp
         logger.hpp
         utils.hpp
-        simulator.cpp
-        simulator.hpp)
+        process.cpp
+        process.hpp)
