@@ -104,7 +104,7 @@ class Spooler {
 public:
 
     template<typename... Printers>
-    explicit Spooler(Printers &&... prints) : buffer_capacity() {
+    explicit Spooler(Printers &&... prints) : buffer_capacity(10) {
         addPrinter(std::forward<Printers>(prints)...);
         printPrinters();
     }
@@ -124,7 +124,7 @@ public:
     void removePrinter(unsigned int id) {}
 
     void printPrinters() const {
-        std::cout << "SPOOLER: " << std::endl;
+        std::cout << "SPOOLER: " << buffer_capacity << std::endl;
         for (const auto &printer: printers) {
             std::cout << "Printer ID: " << printer.getId() << std::endl;
         }
