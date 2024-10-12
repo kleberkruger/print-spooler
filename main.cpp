@@ -24,8 +24,8 @@ void startSimulation(unsigned int num_process, unsigned int num_printers) {
     Spooler sp6(Printer(4), Printer(5));  // Objetos temporários (rvalues)
     Spooler sp7(50, Printer(6), Printer(7));
     Spooler sp8(50L, Printer(6), Printer(7));
-//    Spooler sp9(50, 8, 0);
-//    Spooler spooler(static_cast<unsigned long>(50), Printer(6), Printer(7));
+//    Spooler sp9(50, 8, 0); // ERROR!
+    Spooler spooler(static_cast<unsigned long>(50), Printer(6), Printer(7));
 
     std::vector<std::pair<Process, std::thread>> process;
 
