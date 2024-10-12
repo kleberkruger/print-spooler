@@ -104,24 +104,29 @@ class Spooler {
 public:
 
     template<typename... Printers>
-    explicit Spooler(Printers &... printers) : buffer_capacity() {
-        addPrinters(printers...);
+    explicit Spooler(Printers &&... prints) : buffer_capacity() {
+        addPrinter(std::forward<Printers>(prints)...);
         printPrinters();
     }
 
     template<typename... Printers>
-    explicit Spooler(unsigned long buffer_capacity, Printers &... printers) : buffer_capacity(buffer_capacity) {
-        addPrinters(printers...);
+    explicit Spooler(unsigned long buffer_capacity, Printers &&... prints) : buffer_capacity(buffer_capacity) {
+        addPrinter(std::forward<Printers>(prints)...);
         printPrinters();
     }
 
-    void addPrinter(Printer &printer) {}
+    template<typename P, typename... Printers>
+    void addPrinter(P &&printer, Printers &&... others) {
+        printers.emplace_back(std::forward<P>(printer));
+        addPrinter(std::forward<Printers>(others)...);
+    }
 
     void removePrinter(unsigned int id) {}
 
     void printPrinters() const {
+        std::cout << "SPOOLER: " << std::endl;
         for (const auto &printer: printers) {
-            std::cout << "Printer ID: " << printer.get().getId() << std::endl;
+            std::cout << "Printer ID: " << printer.getId() << std::endl;
         }
     }
 
@@ -130,20 +135,17 @@ public:
 
 private:
     std::priority_queue<PrintJob, std::vector<PrintJob>, decltype(&PrintJob::compare)> buffer;
-    std::vector<std::reference_wrapper<Printer>> printers;
+    std::vector<Printer> printers;
     unsigned long buffer_capacity;
     std::mutex mutex;
     std::condition_variable cond_full;
     std::condition_variable cond_empty;
-    float simulation_velocity;
+//    float simulation_velocity;
 
-    template<typename FirstPrinter, typename... RestPrinters>
-    void addPrinters(FirstPrinter &first, RestPrinters &... rest) {
-        printers.push_back(first);
-        addPrinters(rest...);
+    template<typename... Args>
+    void addPrinter(Args &&... args) {
+        (printers.emplace_back(std::forward<Args>(args)), ...);
     }
-
-    void addPrinters() {}
 
     void pushJob(const PrintJob &request);
 

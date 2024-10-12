@@ -16,16 +16,19 @@ void startSimulation(unsigned int num_process, unsigned int num_printers) {
     Spooler sp5(10, printer1, printer2, printer3);  // Vários objetos Printer lvalues com buffer_capacity
 
     // Testando com temporários
-    sp0.addPrinter(printer1);
-//    sp0.addPrinter(Printer(4));
-//    Spooler sp6(Printer(4), Printer(5));  // Objetos temporários (rvalues)
-//    Spooler sp7(20, Printer(6), Printer(7));
+//    sp0.addPrinter(); // ERROR!
+    sp1.addPrinter(printer1);
+    sp1.addPrinter(printer1, printer2, printer3);
+    sp1.addPrinter(Printer(4), Printer(5));
+
+    Spooler sp6(Printer(4), Printer(5));  // Objetos temporários (rvalues)
+    Spooler sp7(20, Printer(6), Printer(7));
 
     std::vector<std::pair<Process, std::thread>> process;
 
     for (int pid = 1; pid <= num_process; pid++) {
         Process p(pid);
-        process.emplace_back(p, p.startPrintOrders(sp0));
+        process.emplace_back(p, p.startPrintOrders(sp1));
     }
 
     for (auto &t: process) {
