@@ -4,9 +4,12 @@ project(print-spooler)
 set(CMAKE_CXX_STANDARD 23)
 
 add_executable(print-spooler main.cpp
-        spooler.cpp
-        spooler.hpp
+        simulator.cpp
+        simulator.hpp
         logger.hpp
         utils.hpp
-        process.cpp
-        process.hpp)
+        spooler.cpp
+        spooler.hpp
+        printer.cpp
+        printer.hpp
+        job.hpp)

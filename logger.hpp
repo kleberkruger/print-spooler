@@ -86,4 +86,3 @@ namespace logger {
         Logger::get().log(format, args...);
     }
 }
-
